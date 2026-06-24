@@ -12,7 +12,7 @@ EMAIL="hman@husbandforhour.com"
 ADDR_CITY="Fairbanks"; ADDR_REGION="AK"; ADDR_ZIP="99707"; PO="PO Box 70200"
 GEO=(64.8378,-147.7164)
 YEAR="2026"
-VER="14"  # asset cache-bust
+VER="15"  # asset cache-bust
 GBP_PLACE="ChIJx4dkAM9FMlERiIUZ_RuUXds"  # Google Business Profile place id
 GBP_REVIEWS=f"https://search.google.com/local/reviews?placeid={GBP_PLACE}"
 GBP_WRITE=f"https://search.google.com/local/writereview?placeid={GBP_PLACE}"
@@ -55,7 +55,8 @@ IC={
 }
 def ic(n,cls=""):
     c=f' class="{cls}"' if cls else ""
-    return f'<svg{c} viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{IC[n]}</svg>'
+    # default width/height so icons are never unconstrained; CSS (.icon svg, .btn svg, etc.) overrides where needed
+    return f'<svg{c} width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">{IC[n]}</svg>'
 
 # ---------------- nav ----------------
 NAV=[("index.html","Home"),("services.html","Services"),("pricing.html","Fixed Pricing"),
