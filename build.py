@@ -12,7 +12,7 @@ EMAIL="hman@husbandforhour.com"
 ADDR_CITY="Fairbanks"; ADDR_REGION="AK"; ADDR_ZIP="99707"; PO="PO Box 70200"
 GEO=(64.8378,-147.7164)
 YEAR="2026"
-VER="11"  # asset cache-bust
+VER="13"  # asset cache-bust
 
 # ---------------- inline icons ----------------
 IC={
@@ -323,6 +323,14 @@ def price_table(group):
       <tbody>{trs}</tbody></table></div>'''
 
 # ============================================================ PAGES
+def upload_field(idn):
+    up='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4"/><path d="m7.5 8.5 4.5-4.5 4.5 4.5"/><path d="M5 15v3a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-3"/></svg>'
+    return (f'<div class="field"><label>Add photos or videos <span class="optional">optional, helps us quote faster</span></label>'
+            f'<label class="upload"><input type="file" name="photos" id="photos-{idn}" accept="image/*,video/*" multiple>'
+            f'{up}<span class="upload-main">Drag files here, or <b>browse</b></span>'
+            f'<span class="upload-sub">Photos or short videos &middot; JPG, PNG, HEIC, MP4, MOV</span>'
+            f'<div class="upload-list" aria-live="polite"></div></label></div>')
+
 def home():
     services=[
      ("drop","Plumbing &amp; Drains","Running toilets, leaky and worn faucets, clogged drains, P-traps and shutoff valves."),
@@ -546,7 +554,7 @@ def home():
     <div class="reveal">
       <p class="eyebrow">Free, no-obligation quote</p>
       <h2>Ready to cross it off the list?</h2>
-      <p class="lead">Tell us the job and snap a couple of photos. We reply fast, usually the same business day, with a flat price straight from our book. No hourly meter, no surprises.</p>
+      <p class="lead">Tell us the job and snap a couple of photos. We respond promptly with a flat price straight from our book. No hourly meter, no surprises.</p>
       <ul class="area-list" style="columns:1;margin:18px 0 6px;max-width:none">
         <li><b>Flat price up front</b> &mdash; you approve it before we start.</li>
         <li><b>Licensed, bonded, insured</b> professionals at your door.</li>
@@ -555,13 +563,14 @@ def home():
       <p style="margin-top:18px;font-size:1.08rem">Prefer to talk? <a href="tel:{TEL}" style="font-weight:700">Call or text {PHONE}</a></p>
     </div>
     <div class="reveal">
-      <form id="quoteForm" class="form-card" novalidate>
+      <form id="quoteForm" class="form-card" enctype="multipart/form-data" novalidate>
         <div class="form-row">
           <div class="field"><label>Name <span class="req">*</span></label><input name="name" required><div class="err">Please enter your name.</div></div>
           <div class="field"><label>Phone <span class="req">*</span></label><input name="phone" type="tel" required><div class="err">Please enter a phone number.</div></div>
         </div>
         <div class="field"><label>Email <span class="req">*</span></label><input name="email" type="email" required><div class="err">Please enter a valid email.</div></div>
         <div class="field"><label>What do you need done? <span class="req">*</span></label><textarea name="message" required placeholder="A few details and we will send your flat-rate quote."></textarea><div class="err">Please tell us about the job.</div></div>
+        {upload_field("home")}
         <button class="btn btn-gold btn-lg" type="submit" style="width:100%">Get my free quote</button>
         <p class="muted" style="font-size:.8rem;margin:12px 0 0;text-align:center">No obligation. W-9, EIN and Certificate of Insurance provided on request.</p>
       </form>
@@ -785,8 +794,8 @@ def contact():
   <div class="split" style="align-items:start">
     <div class="reveal">
       <h2>Request your free quote</h2>
-      <p class="muted">Most jobs can be quoted from photos. We reply fast, usually the same business day.</p>
-      <form id="quoteForm" class="form-card" novalidate>
+      <p class="muted">Most jobs can be quoted from photos, and we respond promptly.</p>
+      <form id="quoteForm" class="form-card" enctype="multipart/form-data" novalidate>
         <div class="form-row">
           <div class="field"><label>Name <span class="req">*</span></label><input name="name" required><div class="err">Please enter your name.</div></div>
           <div class="field"><label>Phone <span class="req">*</span></label><input name="phone" type="tel" required><div class="err">Please enter a phone number.</div></div>
@@ -800,6 +809,7 @@ def contact():
           <div class="field"><label>Type of work</label><select name="category">{opts}</select></div>
         </div>
         <div class="field"><label>Describe the job <span class="req">*</span></label><textarea name="message" required placeholder="What needs fixing? The more detail, the faster we can price it."></textarea><div class="err">Please describe the job.</div></div>
+        {upload_field("contact")}
         <button class="btn btn-gold btn-lg" type="submit" style="width:100%">Send my request</button>
         <p class="muted" style="font-size:.82rem;margin:12px 0 0">Prefer to talk? Call or text <a href="tel:{TEL}">{PHONE}</a>. We provide W-9, EIN and Certificate of Insurance on request.</p>
       </form>
@@ -829,6 +839,42 @@ PAGES={"index.html":home,"services.html":services,"pricing.html":pricing,
 for slug,fn in PAGES.items():
     with open(os.path.join(OUT,slug),"w") as f: f.write(fn())
     print("wrote",slug)
+
+# self-contained 404 (works at site root; links are root-relative, tel: always works)
+four04=f'''<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found | {NAME}</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/img/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{{box-sizing:border-box;margin:0}}
+body{{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;
+ font-family:"Inter",system-ui,sans-serif;color:#eaf3ee;
+ background:linear-gradient(160deg,#075c46 0%,#053a2c 70%,#04261d 100%)}}
+.w{{max-width:560px}}
+img{{height:64px;margin:0 auto 26px;display:block}}
+.code{{font-family:"Archivo",sans-serif;font-weight:800;font-size:clamp(4rem,16vw,8rem);line-height:1;color:#e9b13a}}
+h1{{font-family:"Archivo",sans-serif;font-weight:800;font-size:clamp(1.6rem,4vw,2.4rem);margin:.4rem 0 .6rem;color:#fff}}
+p{{color:#cfe0d6;font-size:1.1rem;margin-bottom:28px}}
+.btns{{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}}
+a.btn{{display:inline-flex;align-items:center;gap:.5rem;font-family:"Archivo",sans-serif;font-weight:700;
+ font-size:1.05rem;padding:.9rem 1.7rem;border-radius:999px;text-decoration:none;transition:.18s}}
+.gold{{background:#e9b13a;color:#04261d}}.gold:hover{{background:#f1bd4d}}
+.ghost{{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5)}}.ghost:hover{{background:#fff;color:#075c46}}
+</style></head><body>
+<div class="w">
+  <img src="/assets/img/logo.png" alt="{NAME}">
+  <div class="code">404</div>
+  <h1>That page took the day off.</h1>
+  <p>The page you are looking for is not here, but your honey-do list still is. Let us take it off your hands.</p>
+  <div class="btns">
+    <a class="btn gold" href="tel:{TEL}">Call or text {PHONE}</a>
+    <a class="btn ghost" href="/">Back to home</a>
+  </div>
+</div></body></html>'''
+with open(os.path.join(OUT,"404.html"),"w") as f: f.write(four04)
+print("wrote 404.html")
 
 with open(os.path.join(OUT,"robots.txt"),"w") as f:
     f.write(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")

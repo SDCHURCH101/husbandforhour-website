@@ -58,6 +58,26 @@
     });
   }
 
+  /* ---------- photo / video upload: show selected files + drag highlight ---------- */
+  var fileIcon='<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>';
+  [].forEach.call(document.querySelectorAll('.upload input[type=file]'),function(inp){
+    var box=inp.closest('.upload'), list=box.querySelector('.upload-list');
+    inp.addEventListener('change',function(){
+      list.innerHTML='';
+      var files=[].slice.call(inp.files);
+      files.slice(0,8).forEach(function(f){
+        var c=document.createElement('span'); c.className='upload-chip';
+        c.innerHTML=fileIcon+'<span>'+f.name+'</span>'; list.appendChild(c);
+      });
+      if(files.length>8){
+        var more=document.createElement('span'); more.className='upload-chip';
+        more.textContent='+'+(files.length-8)+' more'; list.appendChild(more);
+      }
+    });
+    ['dragover','dragenter'].forEach(function(e){box.addEventListener(e,function(ev){ev.preventDefault();box.classList.add('drag');});});
+    ['dragleave','dragend','drop'].forEach(function(e){box.addEventListener(e,function(){box.classList.remove('drag');});});
+  });
+
   /* ---------- price book: search + category chips ---------- */
   var pbSearch=document.getElementById('pbSearch');
   if(pbSearch){
