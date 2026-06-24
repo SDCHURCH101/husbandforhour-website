@@ -39,19 +39,19 @@
   var form=document.getElementById('quoteForm');
   if(form){
     form.addEventListener('submit',function(ev){
-      ev.preventDefault();
       var ok=true;
       form.querySelectorAll('[required]').forEach(function(f){
         var bad=!f.value.trim()||(f.type==='email'&&!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(f.value));
         f.closest('.field').classList.toggle('invalid',bad);
         if(bad)ok=false;
       });
-      if(!ok)return;
-      form.style.display='none';
-      var done=document.getElementById('formOk');
-      if(done){done.classList.add('show');done.scrollIntoView({behavior:'smooth',block:'center'});}
-      /* NOTE: demo only. To receive submissions, wire to Formspree/Netlify Forms
-         or a server endpoint and remove this handler's preventDefault path. */
+      if(!ok){ev.preventDefault();
+        var first=form.querySelector('.field.invalid');
+        if(first)first.scrollIntoView({behavior:'smooth',block:'center'});
+        return;}
+      /* valid -> submit natively to the email endpoint (FormSubmit), which redirects to /thanks.html */
+      var btn=form.querySelector('button[type=submit]');
+      if(btn){btn.disabled=true;btn.textContent='Sending...';}
     });
     form.querySelectorAll('[required]').forEach(function(f){
       f.addEventListener('input',function(){f.closest('.field').classList.remove('invalid');});

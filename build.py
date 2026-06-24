@@ -12,7 +12,11 @@ EMAIL="hman@husbandforhour.com"
 ADDR_CITY="Fairbanks"; ADDR_REGION="AK"; ADDR_ZIP="99707"; PO="PO Box 70200"
 GEO=(64.8378,-147.7164)
 YEAR="2026"
-VER="13"  # asset cache-bust
+VER="14"  # asset cache-bust
+GBP_PLACE="ChIJx4dkAM9FMlERiIUZ_RuUXds"  # Google Business Profile place id
+GBP_REVIEWS=f"https://search.google.com/local/reviews?placeid={GBP_PLACE}"
+GBP_WRITE=f"https://search.google.com/local/writereview?placeid={GBP_PLACE}"
+FORM_ACTION=f"https://formsubmit.co/{EMAIL}"  # free email-forwarding endpoint (one-time activation)
 
 # ---------------- inline icons ----------------
 IC={
@@ -518,7 +522,8 @@ def home():
       <p>&ldquo;People you can trust, hands down.&rdquo;</p>
       <div class="rev-by"><span class="rev-name">J. C.</span><span class="rev-src">{ic("star")}Google review</span></div></div>
   </div>
-  <div class="center" style="margin-top:32px"><a class="btn btn-gold btn-lg" href="https://www.google.com/search?q=Husband+for+an+Hour+Fairbanks+reviews" target="_blank" rel="noopener">Read more reviews on Google {ic("arrow")}</a></div>
+  <div class="center" style="margin-top:32px"><a class="btn btn-gold btn-lg" href="{GBP_REVIEWS}" target="_blank" rel="noopener">Read more reviews on Google {ic("arrow")}</a></div>
+  <p class="center" style="margin-top:14px"><a href="{GBP_WRITE}" target="_blank" rel="noopener" style="color:var(--gold);font-weight:600">Worked with us? Leave a review {ic("arrow")}</a></p>
 </div></section>
 
 <section class="sec"><div class="wrap">
@@ -563,7 +568,12 @@ def home():
       <p style="margin-top:18px;font-size:1.08rem">Prefer to talk? <a href="tel:{TEL}" style="font-weight:700">Call or text {PHONE}</a></p>
     </div>
     <div class="reveal">
-      <form id="quoteForm" class="form-card" enctype="multipart/form-data" novalidate>
+      <form id="quoteForm" class="form-card" action="{FORM_ACTION}" method="POST" enctype="multipart/form-data" novalidate>
+        <input type="hidden" name="_subject" value="New quote request from husbandforhour.com">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="{BASE}/thanks.html">
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
         <div class="form-row">
           <div class="field"><label>Name <span class="req">*</span></label><input name="name" required><div class="err">Please enter your name.</div></div>
           <div class="field"><label>Phone <span class="req">*</span></label><input name="phone" type="tel" required><div class="err">Please enter a phone number.</div></div>
@@ -795,7 +805,12 @@ def contact():
     <div class="reveal">
       <h2>Request your free quote</h2>
       <p class="muted">Most jobs can be quoted from photos, and we respond promptly.</p>
-      <form id="quoteForm" class="form-card" enctype="multipart/form-data" novalidate>
+      <form id="quoteForm" class="form-card" action="{FORM_ACTION}" method="POST" enctype="multipart/form-data" novalidate>
+        <input type="hidden" name="_subject" value="New quote request from husbandforhour.com">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_next" value="{BASE}/thanks.html">
+        <input type="text" name="_honey" tabindex="-1" autocomplete="off" style="display:none" aria-hidden="true">
         <div class="form-row">
           <div class="field"><label>Name <span class="req">*</span></label><input name="name" required><div class="err">Please enter your name.</div></div>
           <div class="field"><label>Phone <span class="req">*</span></label><input name="phone" type="tel" required><div class="err">Please enter a phone number.</div></div>
@@ -875,6 +890,42 @@ a.btn{{display:inline-flex;align-items:center;gap:.5rem;font-family:"Archivo",sa
 </div></body></html>'''
 with open(os.path.join(OUT,"404.html"),"w") as f: f.write(four04)
 print("wrote 404.html")
+
+# thank-you page (form redirect target)
+thanks=f'''<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1"><title>Thank you | {NAME}</title>
+<meta name="robots" content="noindex">
+<link rel="icon" href="/assets/img/favicon.ico" sizes="any">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;800&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+<style>
+*{{box-sizing:border-box;margin:0}}
+body{{min-height:100vh;display:flex;align-items:center;justify-content:center;text-align:center;padding:30px;
+ font-family:"Inter",system-ui,sans-serif;color:#eaf3ee;background:linear-gradient(160deg,#075c46 0%,#053a2c 70%,#04261d 100%)}}
+.w{{max-width:560px}}
+img{{height:64px;margin:0 auto 24px;display:block}}
+.tick{{width:84px;height:84px;border-radius:50%;background:#e9b13a;display:flex;align-items:center;justify-content:center;margin:0 auto 22px}}
+.tick svg{{width:44px;height:44px;color:#04261d}}
+h1{{font-family:"Archivo",sans-serif;font-weight:800;font-size:clamp(1.8rem,4.5vw,2.6rem);margin:0 0 .6rem;color:#fff}}
+p{{color:#cfe0d6;font-size:1.12rem;margin-bottom:28px}}
+.btns{{display:flex;gap:14px;justify-content:center;flex-wrap:wrap}}
+a.btn{{display:inline-flex;align-items:center;gap:.5rem;font-family:"Archivo",sans-serif;font-weight:700;
+ font-size:1.05rem;padding:.9rem 1.7rem;border-radius:999px;text-decoration:none;transition:.18s}}
+.gold{{background:#e9b13a;color:#04261d}}.gold:hover{{background:#f1bd4d}}
+.ghost{{background:transparent;color:#fff;border:2px solid rgba(255,255,255,.5)}}.ghost:hover{{background:#fff;color:#075c46}}
+</style></head><body>
+<div class="w">
+  <img src="/assets/img/logo.png" alt="{NAME}">
+  <div class="tick"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+  <h1>Thanks, your request is in.</h1>
+  <p>We have got your details and photos. We will get back to you promptly with your flat-rate quote. For anything urgent, give us a call or text.</p>
+  <div class="btns">
+    <a class="btn gold" href="tel:{TEL}">Call or text {PHONE}</a>
+    <a class="btn ghost" href="/">Back to home</a>
+  </div>
+</div></body></html>'''
+with open(os.path.join(OUT,"thanks.html"),"w") as f: f.write(thanks)
+print("wrote thanks.html")
 
 with open(os.path.join(OUT,"robots.txt"),"w") as f:
     f.write(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
