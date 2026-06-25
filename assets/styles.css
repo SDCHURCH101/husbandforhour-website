@@ -17,7 +17,7 @@
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:88px}
 body{margin:0;font-family:var(--sans);color:var(--body);background:var(--cream);
   font-size:17px;line-height:1.65;overflow-x:hidden}
-img{max-width:100%;display:block}
+img{max-width:100%;height:auto;display:block}
 a{color:var(--green);text-decoration:none}
 h1,h2,h3,h4{font-family:var(--disp);color:var(--ink);line-height:1.06;margin:0 0 .5em;
   font-weight:800;letter-spacing:-.01em}
@@ -391,7 +391,7 @@ header.nav{position:sticky;top:0;z-index:1000;background:rgba(247,244,235,.92);
 /* footer */
 footer.ft{background:var(--green-dd);color:#bcd0c4;padding:60px 0 26px;font-size:.94rem}
 .ft-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:34px}
-.ft img.flogo{height:58px;margin-bottom:14px}
+.ft img.flogo{height:58px;width:auto;margin-bottom:14px}
 .ft h4{color:#fff;font-size:1rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
 .ft a{color:#cfe0d6;display:block;padding:.22rem 0}
 .ft a:hover{color:var(--gold)}

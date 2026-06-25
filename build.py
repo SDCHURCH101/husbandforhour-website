@@ -41,7 +41,7 @@ EMAIL="hman@husbandforhour.com"
 ADDR_CITY="Fairbanks"; ADDR_REGION="AK"; ADDR_ZIP="99707"; PO="PO Box 70200"
 GEO=(64.8378,-147.7164)
 YEAR="2026"
-VER="16"  # asset cache-bust
+VER="17"  # asset cache-bust
 GBP_PLACE="ChIJx4dkAM9FMlERiIUZ_RuUXds"  # Google Business Profile place id
 GBP_REVIEWS=f"https://search.google.com/local/reviews?placeid={GBP_PLACE}"
 GBP_WRITE=f"https://search.google.com/local/writereview?placeid={GBP_PLACE}"
