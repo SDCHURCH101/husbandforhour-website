@@ -12,7 +12,7 @@ EMAIL="hman@husbandforhour.com"
 ADDR_CITY="Fairbanks"; ADDR_REGION="AK"; ADDR_ZIP="99707"; PO="PO Box 70200"
 GEO=(64.8378,-147.7164)
 YEAR="2026"
-VER="15"  # asset cache-bust
+VER="16"  # asset cache-bust
 GBP_PLACE="ChIJx4dkAM9FMlERiIUZ_RuUXds"  # Google Business Profile place id
 GBP_REVIEWS=f"https://search.google.com/local/reviews?placeid={GBP_PLACE}"
 GBP_WRITE=f"https://search.google.com/local/writereview?placeid={GBP_PLACE}"
@@ -464,10 +464,10 @@ def home():
   <div class="split">
     <div class="reveal"><p class="eyebrow">The serious part</p><h2>A fun name. A price you can trust.</h2>
     <p class="lead">Most handymen run an hourly meter and surprise you at the end. We quote a flat rate from our published price book first, so you decide with the real number in hand.</p>
-    <ul class="area-list" style="columns:1;margin:18px 0 6px;max-width:none">
-      <li><b style="color:var(--ink)">Know the price first.</b>&nbsp; The number you approve is the number you pay.</li>
-      <li><b style="color:var(--ink)">No surprise invoices.</b>&nbsp; No stopwatch, no padded materials, no &ldquo;it ran long.&rdquo;</li>
-      <li><b style="color:var(--ink)">Economy or Premium.</b>&nbsp; Pick the material tier that fits your budget.</li>
+    <ul class="checks">
+      <li>{ic("check")}<span><b>Know the price first.</b> The number you approve is the number you pay.</span></li>
+      <li>{ic("check")}<span><b>No surprise invoices.</b> No stopwatch, no padded materials, no &ldquo;it ran long.&rdquo;</span></li>
+      <li>{ic("check")}<span><b>Economy or Premium.</b> Pick the material tier that fits your budget.</span></li>
     </ul>
     <a class="btn btn-green btn-lg" style="margin-top:16px" href="pricing.html">See how fixed pricing works {ic("arrow")}</a></div>
     <div class="quote-wrap reveal" style="margin:0 auto">
@@ -561,10 +561,10 @@ def home():
       <p class="eyebrow">Free, no-obligation quote</p>
       <h2>Ready to cross it off the list?</h2>
       <p class="lead">Tell us the job and snap a couple of photos. We respond promptly with a flat price straight from our book. No hourly meter, no surprises.</p>
-      <ul class="area-list" style="columns:1;margin:18px 0 6px;max-width:none">
-        <li><b>Flat price up front</b> &mdash; you approve it before we start.</li>
-        <li><b>Licensed, bonded, insured</b> professionals at your door.</li>
-        <li><b>Same-week scheduling</b> across the Borough.</li>
+      <ul class="checks">
+        <li>{ic("check")}<span><b>Flat price up front</b> &mdash; you approve it before we start.</span></li>
+        <li>{ic("check")}<span><b>Licensed, bonded, insured</b> professionals at your door.</span></li>
+        <li>{ic("check")}<span><b>Same-week scheduling</b> across the Borough.</span></li>
       </ul>
       <p style="margin-top:18px;font-size:1.08rem">Prefer to talk? <a href="tel:{TEL}" style="font-weight:700">Call or text {PHONE}</a></p>
     </div>
