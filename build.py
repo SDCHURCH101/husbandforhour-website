@@ -2,6 +2,35 @@
 # Static site generator for Husband for an Hour (Fairbanks handyman).
 # Emits 6 pages + robots.txt + sitemap.xml with shared header/footer/SEO.
 import json, os, re
+try:
+    from PIL import Image as _IMG
+except Exception:
+    _IMG=None
+_dim_cache={}
+def _dims(src):
+    """Real pixel dimensions of a local asset image (for width/height attrs -> no layout shift)."""
+    if not _IMG: return None
+    p=src.split('?')[0].lstrip('/')
+    fp=os.path.join("/tmp/husbandforhour",p)
+    if fp in _dim_cache: return _dim_cache[fp]
+    try:
+        with _IMG.open(fp) as im: d=im.size
+    except Exception: d=None
+    _dim_cache[fp]=d; return d
+def optimize_imgs(html):
+    """Add width/height + decoding=async + loading=lazy to content images for Core Web Vitals."""
+    def repl(m):
+        tag=m.group(0)
+        sm=re.search(r'src="([^"]+)"',tag)
+        if not sm or 'assets/img/' not in sm.group(1): return tag
+        add=''
+        if 'width=' not in tag:
+            d=_dims(sm.group(1))
+            if d: add+=f' width="{d[0]}" height="{d[1]}"'
+        if 'decoding=' not in tag: add+=' decoding="async"'
+        if 'loading=' not in tag: add+=' loading="lazy"'
+        return tag[:-1]+add+'>' if add else tag
+    return re.sub(r'<img\b[^>]*>',repl,html)
 
 OUT="/tmp/husbandforhour"
 BASE="https://www.husbandforhour.com"
@@ -80,7 +109,7 @@ def header(active):
 </div></div>
 <header class="nav"><div class="wrap nav-inner">
   <a class="brand notranslate" href="index.html" translate="no" aria-label="{NAME} home">
-    <img src="assets/img/logo.png" alt="{NAME} handyman logo" width="180" height="111"></a>
+    <img src="assets/img/logo.png" alt="{NAME} handyman logo" width="180" height="111" loading="eager" fetchpriority="high"></a>
   <nav><ul class="nav-links">{lis}</ul></nav>
   <a class="nav-phone" href="tel:{TEL}">{PHONE}</a>
   <div class="nav-cta"><a class="btn btn-gold" href="contact.html">Get a Flat Quote</a></div>
@@ -155,19 +184,24 @@ def head(title,desc,slug,extra=None):
     canon=f"{BASE}/{slug}" if slug!="index.html" else BASE+"/"
     ld=[biz_jsonld()]
     if slug=="index.html":
-        ld.append({"@context":"https://schema.org","@type":"WebSite","name":NAME,"url":BASE+"/"})
+        ld.append({"@context":"https://schema.org","@type":"WebSite","@id":BASE+"/#website",
+                   "name":NAME,"url":BASE+"/","inLanguage":"en-US","publisher":{"@id":BASE+"/#business"}})
     if slug!="index.html":
         ld.append({"@context":"https://schema.org","@type":"BreadcrumbList","itemListElement":[
           {"@type":"ListItem","position":1,"name":"Home","item":BASE+"/"},
           {"@type":"ListItem","position":2,"name":dict(NAV)[slug],"item":canon}]})
     if extra: ld.extend(extra if isinstance(extra,list) else [extra])
     ldtags="".join(f'<script type="application/ld+json">{json.dumps(x)}</script>' for x in ld)
+    # preload the LCP image on the home page (the hero mascot)
+    preload='\n<link rel="preload" as="image" href="assets/img/mascot.jpg" fetchpriority="high">' if slug=="index.html" else ''
     return f'''<!doctype html><html lang="en"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{desc}">
+<meta name="robots" content="index, follow, max-image-preview:large, max-snippet:-1, max-video-preview:-1">
 <link rel="canonical" href="{canon}">
 <meta name="theme-color" content="#075c46">
+<meta name="author" content="{NAME}">{preload}
 <meta name="geo.region" content="US-AK"><meta name="geo.placename" content="Fairbanks, Alaska">
 <meta name="geo.position" content="{GEO[0]};{GEO[1]}"><meta name="ICBM" content="{GEO[0]}, {GEO[1]}">
 <meta property="og:type" content="website"><meta property="og:site_name" content="{NAME}">
@@ -375,6 +409,10 @@ def home():
       "Your wife&#39;s favorite backup husband. Husband for an Hour is a licensed, insured Fairbanks handyman service that knocks out your honey-do list with flat-rate pricing from a published price book. Call (907) 759-8080.",
       "index.html",
       extra=[
+        {"@context":"https://schema.org","@type":"WebPage","@id":BASE+"/#webpage","url":BASE+"/",
+         "name":"Husband for an Hour | Fairbanks Handyman, Flat-Rate Pricing","isPartOf":{"@id":BASE+"/#website"},
+         "about":{"@id":BASE+"/#business"},"inLanguage":"en-US",
+         "speakable":{"@type":"SpeakableSpecification","cssSelector":["h1",".lead",".q .a"]}},
         {"@context":"https://schema.org","@type":"FAQPage","mainEntity":[
           {"@type":"Question","name":q,"acceptedAnswer":{"@type":"Answer","text":a}} for q,a in faqs]},
         {"@context":"https://schema.org","@type":"LocalBusiness","@id":BASE+"/#business",
@@ -413,7 +451,7 @@ def home():
   </div>
   <div class="hero-visual reveal">
     <div class="hero-figure">
-      <img src="assets/img/mascot.jpg" alt="Husband for an Hour mascot, a polar bear hugging a friendly Fairbanks handyman by the van">
+      <img src="assets/img/mascot.jpg" alt="Husband for an Hour mascot, a polar bear hugging a friendly Fairbanks handyman by the van" loading="eager" fetchpriority="high">
       <div class="speech">&ldquo;Honey, it&rsquo;s already handled.&rdquo;</div>
       <div class="price-tag">Flat price<b>no surprises</b></div>
     </div>
@@ -853,7 +891,7 @@ def contact():
 PAGES={"index.html":home,"services.html":services,"pricing.html":pricing,
        "service-area.html":service_area,"about.html":about,"contact.html":contact}
 for slug,fn in PAGES.items():
-    with open(os.path.join(OUT,slug),"w") as f: f.write(fn())
+    with open(os.path.join(OUT,slug),"w") as f: f.write(optimize_imgs(fn()))
     print("wrote",slug)
 
 # self-contained 404 (works at site root; links are root-relative, tel: always works)
@@ -889,7 +927,7 @@ a.btn{{display:inline-flex;align-items:center;gap:.5rem;font-family:"Archivo",sa
     <a class="btn ghost" href="/">Back to home</a>
   </div>
 </div></body></html>'''
-with open(os.path.join(OUT,"404.html"),"w") as f: f.write(four04)
+with open(os.path.join(OUT,"404.html"),"w") as f: f.write(optimize_imgs(four04))
 print("wrote 404.html")
 
 # thank-you page (form redirect target)
@@ -925,11 +963,51 @@ a.btn{{display:inline-flex;align-items:center;gap:.5rem;font-family:"Archivo",sa
     <a class="btn ghost" href="/">Back to home</a>
   </div>
 </div></body></html>'''
-with open(os.path.join(OUT,"thanks.html"),"w") as f: f.write(thanks)
+with open(os.path.join(OUT,"thanks.html"),"w") as f: f.write(optimize_imgs(thanks))
 print("wrote thanks.html")
 
+ai_bots=["GPTBot","OAI-SearchBot","ChatGPT-User","ClaudeBot","Claude-Web","anthropic-ai",
+         "PerplexityBot","Perplexity-User","Google-Extended","Applebot","Applebot-Extended",
+         "Amazonbot","Bytespider","CCBot","Meta-ExternalAgent","cohere-ai","DuckAssistBot","YouBot"]
+robots=("# Husband for an Hour — robots.txt\nUser-agent: *\nAllow: /\n\n"
+        "# Traditional + AI/answer engines are explicitly welcome\n"
+        + "".join(f"User-agent: {b}\nAllow: /\n" for b in ai_bots)
+        + f"\nSitemap: {BASE}/sitemap.xml\n")
 with open(os.path.join(OUT,"robots.txt"),"w") as f:
-    f.write(f"User-agent: *\nAllow: /\nSitemap: {BASE}/sitemap.xml\n")
+    f.write(robots)
+
+# llms.txt — concise, factual site summary for LLMs / answer engines (emerging standard)
+llms=f"""# {NAME}
+
+> Fixed-price (flat-rate) handyman service for the Fairbanks North Star Borough, Alaska. Licensed, bonded, and insured. Prices come from a published price book, so customers know the cost before work begins. Photos and videos can be sent with a quote request.
+
+## Key facts
+- Business: {NAME}, a residential and commercial handyman service.
+- Location served: the entire Fairbanks North Star Borough, Alaska, including Fairbanks, North Pole, Fort Wainwright, Eielson AFB, College, Ester, Fox, Two Rivers, Salcha, Pleasant Valley, Moose Creek and Harding-Birch Lakes.
+- Pricing model: flat-rate / fixed pricing from a published price book (400+ line items across 13 categories). Most jobs have Economy and Premium material tiers; service-only jobs (drain clearing, gutter cleaning, snow removal, etc.) are a single flat rate. The price is quoted and approved before work starts — no hourly meter, no time-and-materials surprises.
+- Onsite diagnosis fee: $200, discounted when more than one price-book service is done on the same visit. Many jobs can be quoted for free from a few photos.
+- Credentials: licensed, bonded, and insured; W-9, EIN, and Certificate of Insurance provided on request.
+- Phone / text: {PHONE}
+- Email: {EMAIL}
+- Hours: Monday to Saturday, 8am to 6pm.
+- Languages: the website translates into 80+ languages.
+
+## Who it serves
+Homeowners, realtors (pre-listing punch lists), property managers (turnovers and maintenance), and businesses.
+
+## Services
+Plumbing and drains; electrical and fixtures; drywall, patch and paint; doors, windows and weatherization; carpentry and repairs; flooring, tile and trim; hanging and assembly; caulking, kitchen and bath; safety and accessibility; garage and storage; exterior, yard and fencing; arctic and seasonal (Alaska winter prep); odd jobs, cleaning and hauling.
+
+## Pages
+- [Home]({BASE}/): overview, fixed-price promise, reviews, free quote.
+- [Services]({BASE}/services.html): full list of handyman services by category.
+- [Fixed Pricing]({BASE}/pricing.html): the complete, searchable flat-rate price book.
+- [Service Area]({BASE}/service-area.html): the Fairbanks North Star Borough communities served.
+- [About]({BASE}/about.html): the company and team.
+- [Contact]({BASE}/contact.html): request a free flat-rate quote (photos/videos accepted).
+"""
+with open(os.path.join(OUT,"llms.txt"),"w") as f: f.write(llms)
+print("wrote robots.txt + llms.txt")
 urls="".join(
   f"<url><loc>{BASE}/{'' if s=='index.html' else s}</loc><changefreq>monthly</changefreq>"
   f"<priority>{'1.0' if s=='index.html' else '0.8'}</priority></url>" for s in PAGES)
