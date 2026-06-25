@@ -41,7 +41,7 @@ EMAIL="hman@husbandforhour.com"
 ADDR_CITY="Fairbanks"; ADDR_REGION="AK"; ADDR_ZIP="99707"; PO="PO Box 70200"
 GEO=(64.8378,-147.7164)
 YEAR="2026"
-VER="18"  # asset cache-bust
+VER="19"  # asset cache-bust
 GBP_PLACE="ChIJx4dkAM9FMlERiIUZ_RuUXds"  # Google Business Profile place id
 GBP_REVIEWS=f"https://search.google.com/local/reviews?placeid={GBP_PLACE}"
 GBP_WRITE=f"https://search.google.com/local/writereview?placeid={GBP_PLACE}"
@@ -109,7 +109,7 @@ def header(active):
 </div></div>
 <header class="nav"><div class="wrap nav-inner">
   <a class="brand notranslate" href="index.html" translate="no" aria-label="{NAME} home">
-    <img src="assets/img/logo.png" alt="{NAME} handyman logo" width="180" height="111" loading="eager" fetchpriority="high"></a>
+    <img src="assets/img/logo.png" alt="{NAME} handyman logo" loading="eager" fetchpriority="high"></a>
   <nav><ul class="nav-links">{lis}</ul></nav>
   <a class="nav-phone" href="tel:{TEL}">{PHONE}</a>
   <div class="nav-cta"><a class="btn btn-gold" href="contact.html">Get a Flat Quote</a></div>
