@@ -41,7 +41,7 @@ EMAIL="hman@husbandforhour.com"
 ADDR_CITY="Fairbanks"; ADDR_REGION="AK"; ADDR_ZIP="99707"; PO="PO Box 70200"
 GEO=(64.8378,-147.7164)
 YEAR="2026"
-VER="17"  # asset cache-bust
+VER="18"  # asset cache-bust
 GBP_PLACE="ChIJx4dkAM9FMlERiIUZ_RuUXds"  # Google Business Profile place id
 GBP_REVIEWS=f"https://search.google.com/local/reviews?placeid={GBP_PLACE}"
 GBP_WRITE=f"https://search.google.com/local/writereview?placeid={GBP_PLACE}"
@@ -127,7 +127,14 @@ def footer():
     <div>
       <img class="flogo" src="assets/img/logo.png" alt="{NAME}">
       <p>Fixed-price handyman service for the Fairbanks North Star Borough. Know the price before we start, no time-and-materials surprises.</p>
-      {seal(txt="")}
+      <div class="ft-family">
+        <span class="ft-family-label">A family of Fairbanks companies</span>
+        <div class="ft-family-logos">
+          <img src="assets/img/badge.png" alt="Husband for an Hour, Fairbanks handyman">
+          <img src="assets/img/septic-pro-badge.png" alt="Septic Pro, Fairbanks septic service">
+          <a href="https://www.hydrovacpro.com" target="_blank" rel="noopener" aria-label="Hydrovac Pro (opens in a new tab)"><img src="assets/img/hydrovac-pro-badge.png" alt="Hydrovac Pro, Fairbanks hydro-excavation"></a>
+        </div>
+      </div>
       <div class="ft-badges"><span>Licensed</span><span>Bonded</span><span>Insured</span><span>W-9 &amp; COI on request</span></div>
     </div>
     <div><h4>Pages</h4>{cols}</div>

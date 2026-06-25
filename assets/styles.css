@@ -392,6 +392,13 @@ header.nav{position:sticky;top:0;z-index:1000;background:rgba(247,244,235,.92);
 footer.ft{background:var(--green-dd);color:#bcd0c4;padding:60px 0 26px;font-size:.94rem}
 .ft-grid{display:grid;grid-template-columns:1.4fr 1fr 1fr 1.2fr;gap:34px}
 .ft img.flogo{height:58px;width:auto;margin-bottom:14px}
+.ft-family{margin:20px 0 6px}
+.ft-family-label{display:block;font-family:var(--disp);font-weight:700;font-size:.74rem;
+  letter-spacing:.1em;text-transform:uppercase;color:#9fc0b0;margin-bottom:12px}
+.ft-family-logos{display:flex;align-items:center;gap:13px;flex-wrap:wrap}
+.ft-family-logos img{width:76px;height:auto;display:block}
+.ft-family-logos a{display:inline-flex;transition:transform .18s}
+.ft-family-logos a:hover{transform:translateY(-3px)}
 .ft h4{color:#fff;font-size:1rem;text-transform:uppercase;letter-spacing:.08em;margin-bottom:14px}
 .ft a{color:#cfe0d6;display:block;padding:.22rem 0}
 .ft a:hover{color:var(--gold)}
