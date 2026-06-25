@@ -1007,7 +1007,10 @@ Plumbing and drains; electrical and fixtures; drywall, patch and paint; doors, w
 - [Contact]({BASE}/contact.html): request a free flat-rate quote (photos/videos accepted).
 """
 with open(os.path.join(OUT,"llms.txt"),"w") as f: f.write(llms)
-print("wrote robots.txt + llms.txt")
+# Google Search Console HTML-file verification
+with open(os.path.join(OUT,"googleb0206cd9eeaf4d05.html"),"w") as f:
+    f.write("google-site-verification: googleb0206cd9eeaf4d05.html")
+print("wrote robots.txt + llms.txt + GSC verification")
 urls="".join(
   f"<url><loc>{BASE}/{'' if s=='index.html' else s}</loc><changefreq>monthly</changefreq>"
   f"<priority>{'1.0' if s=='index.html' else '0.8'}</priority></url>" for s in PAGES)
