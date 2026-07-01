@@ -48,10 +48,27 @@ GBP_WRITE=f"https://search.google.com/local/writereview?placeid={GBP_PLACE}"
 FORM_ACTION=f"https://formsubmit.co/{EMAIL}"  # free email-forwarding endpoint (one-time activation)
 # Google tag (Google Ads conversion tracking) — goes immediately after <head> on every page
 GTAG_ID="AW-18004543811"
+CALL_LABEL="AW-18004543811/7Xt_CK-mx8gcEMOSnolD"   # phone click-to-call conversion
+LEAD_LABEL="AW-18004543811/sQyKCNSvx8gcEMOSnolD"   # lead-form submit conversion (thanks.html)
 GTAG=('<!-- Google tag (gtag.js) -->'
       '<script async src="https://www.googletagmanager.com/gtag/js?id='+GTAG_ID+'"></script>'
       '<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}'
       "gtag('js',new Date());gtag('config','"+GTAG_ID+"');</script>")
+# click-to-call conversion helper (every page)
+GTAG_CALL=("<script>function gtag_report_conversion(url){var callback=function(){"
+           "if(typeof(url)!='undefined'){window.location=url;}};"
+           "gtag('event','conversion',{'send_to':'"+CALL_LABEL+"','value':1.0,'currency':'USD',"
+           "'event_callback':callback});return false;}</script>")
+# lead-form submit conversion — only on thanks.html (the form redirect target)
+GTAG_LEAD="<script>gtag('event','conversion',{'send_to':'"+LEAD_LABEL+"'});</script>"
+TEL_ONCLICK=" onclick=\"return gtag_report_conversion('tel:"+TEL+"');\""
+_TEL_RE=re.compile(r'<a\b[^>]*href="tel:'+re.escape(TEL)+r'"[^>]*>')
+def add_call_tracking(html):
+    """Add the click-to-call conversion onclick to every tel: link (if not already present)."""
+    def repl(m):
+        tag=m.group(0)
+        return tag if 'onclick' in tag else tag[:-1]+TEL_ONCLICK+'>'
+    return _TEL_RE.sub(repl, html)
 
 # ---------------- inline icons ----------------
 IC={
@@ -208,7 +225,7 @@ def head(title,desc,slug,extra=None):
     # preload the LCP image on the home page (the hero mascot)
     preload='\n<link rel="preload" as="image" href="assets/img/mascot.jpg" fetchpriority="high">' if slug=="index.html" else ''
     return f'''<!doctype html><html lang="en"><head>
-{GTAG}
+{GTAG}{GTAG_CALL}
 <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{title}</title>
 <meta name="description" content="{desc}">
@@ -905,11 +922,11 @@ def contact():
 PAGES={"index.html":home,"services.html":services,"pricing.html":pricing,
        "service-area.html":service_area,"about.html":about,"contact.html":contact}
 for slug,fn in PAGES.items():
-    with open(os.path.join(OUT,slug),"w") as f: f.write(optimize_imgs(fn()))
+    with open(os.path.join(OUT,slug),"w") as f: f.write(add_call_tracking(optimize_imgs(fn())))
     print("wrote",slug)
 
 # self-contained 404 (works at site root; links are root-relative, tel: always works)
-four04=f'''<!doctype html><html lang="en"><head>{GTAG}
+four04=f'''<!doctype html><html lang="en"><head>{GTAG}{GTAG_CALL}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>Page not found | {NAME}</title>
 <meta name="robots" content="noindex">
@@ -942,11 +959,11 @@ a.btn{{display:inline-flex;align-items:center;gap:.5rem;font-family:"Archivo",sa
     <a class="btn ghost" href="/">Back to home</a>
   </div>
 </div></body></html>'''
-with open(os.path.join(OUT,"404.html"),"w") as f: f.write(optimize_imgs(four04))
+with open(os.path.join(OUT,"404.html"),"w") as f: f.write(add_call_tracking(optimize_imgs(four04)))
 print("wrote 404.html")
 
 # thank-you page (form redirect target)
-thanks=f'''<!doctype html><html lang="en"><head>{GTAG}
+thanks=f'''<!doctype html><html lang="en"><head>{GTAG}{GTAG_LEAD}{GTAG_CALL}
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1"><title>Thank you | {NAME}</title>
 <meta name="robots" content="noindex">
@@ -979,7 +996,7 @@ a.btn{{display:inline-flex;align-items:center;gap:.5rem;font-family:"Archivo",sa
     <a class="btn ghost" href="/">Back to home</a>
   </div>
 </div></body></html>'''
-with open(os.path.join(OUT,"thanks.html"),"w") as f: f.write(optimize_imgs(thanks))
+with open(os.path.join(OUT,"thanks.html"),"w") as f: f.write(add_call_tracking(optimize_imgs(thanks)))
 print("wrote thanks.html")
 
 ai_bots=["GPTBot","OAI-SearchBot","ChatGPT-User","ClaudeBot","Claude-Web","anthropic-ai",
