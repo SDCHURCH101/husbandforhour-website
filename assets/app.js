@@ -84,8 +84,10 @@
     var cats=[].slice.call(document.querySelectorAll('.pb-cat'));
     var noRes=document.getElementById('pbNoResult');
     var defOpen=cats.map(function(c){return c.open;});
-    pbSearch.addEventListener('input',function(){
+    var lastQ=null;
+    function runSearch(){
       var q=pbSearch.value.trim().toLowerCase();
+      if(q===lastQ)return; lastQ=q;
       var anyVisible=false;
       cats.forEach(function(c,i){
         var m=0;
@@ -98,6 +100,10 @@
         if(m>0||!q)anyVisible=true;
       });
       if(noRes)noRes.hidden=!(q&&!anyVisible);
+    }
+    var pbTimer;
+    pbSearch.addEventListener('input',function(){
+      clearTimeout(pbTimer); pbTimer=setTimeout(runSearch,130);
     });
     [].forEach.call(document.querySelectorAll('.pb-chip'),function(ch){
       ch.addEventListener('click',function(e){

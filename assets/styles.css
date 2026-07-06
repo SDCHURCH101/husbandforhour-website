@@ -16,7 +16,7 @@
 *{box-sizing:border-box}
 html{scroll-behavior:smooth;-webkit-text-size-adjust:100%;scroll-padding-top:88px}
 body{margin:0;font-family:var(--sans);color:var(--body);background:var(--cream);
-  font-size:17px;line-height:1.65;overflow-x:hidden}
+  font-size:17px;line-height:1.65;overflow-x:clip}
 img{max-width:100%;height:auto;display:block}
 a{color:var(--green);text-decoration:none}
 h1,h2,h3,h4{font-family:var(--disp);color:var(--ink);line-height:1.06;margin:0 0 .5em;
@@ -251,6 +251,12 @@ header.nav{position:sticky;top:0;z-index:1000;background:rgba(247,244,235,.92);
 .flat-tag{display:inline-block;font-family:var(--sans);font-weight:600;font-size:.68rem;color:var(--muted);
   background:var(--cream-2);border-radius:6px;padding:.12rem .45rem;
   vertical-align:middle;text-transform:uppercase;letter-spacing:.04em}
+.pb-unit{display:none}
+.pb-legend{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:16px}
+.pb-leg{font-size:.82rem;font-weight:600;color:var(--green-d);background:var(--cream-2);
+  border:1px solid var(--line);border-radius:999px;padding:.34rem .8rem}
+.pb-leg b{color:var(--green);font-weight:800}
+.pb-leg-flat b{color:var(--gold-d)}
 /* full price book: search, chips, accordion */
 .pb-toolbar{position:sticky;top:72px;z-index:60;background:var(--cream-2);
   padding:16px 0 14px;margin:0 -22px 16px;border-bottom:1px solid var(--line)}
@@ -288,6 +294,21 @@ header.nav{position:sticky;top:0;z-index:1000;background:rgba(247,244,235,.92);
   .pb-cat-name{font-size:1.02rem}
   .pb-range{display:none}
   .pb-toolbar{top:0}
+}
+/* phones: fit the 4-col price table to the screen (no clipped Premium column, no sideways scroll) */
+@media(max-width:560px){
+  .price-table{font-size:.86rem}
+  .price-table th,.price-table td{padding:.55rem .6rem}
+  .price-table thead th{font-size:.62rem;letter-spacing:.02em;padding:.55rem .5rem}
+  .price-table .pb-ucol{display:none}                 /* hide the Unit column... */
+  .pb-unit{display:block;font-size:.72rem;color:var(--muted);font-weight:600;margin-top:2px}  /* ...show it inline instead */
+  .price-table td:first-child{white-space:normal;line-height:1.34;padding-right:.4rem}
+  .price-table .num{font-size:.86rem}
+  .price-table th:last-child,.price-table td:last-child{padding-right:.7rem}
+  .flat-tag{font-size:.58rem;padding:.1rem .34rem}
+  .pb-cat>summary{padding:14px 16px}
+  .pb-cat-meta{gap:8px}
+  .pb-leg{font-size:.78rem;padding:.3rem .7rem}
 }
 
 .cat-head{font-family:var(--disp);font-weight:800;color:var(--green-d);

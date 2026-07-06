@@ -41,7 +41,7 @@ EMAIL="hman@husbandforhour.com"
 ADDR_CITY="Fairbanks"; ADDR_REGION="AK"; ADDR_ZIP="99707"; PO="PO Box 70200"
 GEO=(64.8378,-147.7164)
 YEAR="2026"
-VER="19"  # asset cache-bust
+VER="20"  # asset cache-bust
 GBP_PLACE="ChIJx4dkAM9FMlERiIUZ_RuUXds"  # Google Business Profile place id
 GBP_REVIEWS=f"https://search.google.com/local/reviews?placeid={GBP_PLACE}"
 GBP_WRITE=f"https://search.google.com/local/writereview?placeid={GBP_PLACE}"
@@ -383,13 +383,13 @@ def price_table(group):
         svc,unit=row[0],row[1]
         flat = len(row)==3 or (len(row)==4 and row[2]==row[3])
         if flat:
-            trs+=(f'<tr><td>{svc}</td><td class="muted">per {unit}</td>'
+            trs+=(f'<tr><td>{svc}<span class="pb-unit">per {unit}</span></td><td class="muted pb-ucol">per {unit}</td>'
                   f'<td class="num eco">${row[2]}</td><td class="num"><span class="flat-tag">flat rate</span></td></tr>')
         else:
-            trs+=(f'<tr><td>{svc}</td><td class="muted">per {unit}</td>'
+            trs+=(f'<tr><td>{svc}<span class="pb-unit">per {unit}</span></td><td class="muted pb-ucol">per {unit}</td>'
                   f'<td class="num eco">${row[2]}</td><td class="num">${row[3]}</td></tr>')
     return f'''<div class="reveal"><div class="cat-head">{name}</div>
-      <table class="price-table"><thead><tr><th>Service</th><th>Unit</th><th>Economy</th><th>Premium</th></tr></thead>
+      <table class="price-table"><thead><tr><th>Service</th><th class="pb-ucol">Unit</th><th>Economy</th><th>Premium</th></tr></thead>
       <tbody>{trs}</tbody></table></div>'''
 
 # ============================================================ PAGES
@@ -720,13 +720,13 @@ def render_pricebook():
                 price=f'<td class="num eco">${it["p"]}</td><td class="num"><span class="flat-tag">flat rate</span></td>'
             else:
                 price=f'<td class="num eco">${it["e"]}</td><td class="num">${it["m"]}</td>'
-            rows+=f'<tr data-s="{svc.lower()}"><td>{svc}</td><td class="muted">per {unit}</td>{price}</tr>'
+            rows+=f'<tr data-s="{svc.lower()}"><td>{svc}<span class="pb-unit">per {unit}</span></td><td class="muted pb-ucol">per {unit}</td>{price}</tr>'
         op=" open" if gi==0 else ""
         cats+=(f'<details class="pb-cat" id="{slug}"{op}><summary>'
                f'<span class="pb-cat-name">{ic(g["icon"])}{g["name"]}</span>'
                f'<span class="pb-cat-meta">{g["count"]} services <span class="pb-range">${g["lo"]}&ndash;${g["hi"]}</span><span class="pb-chev">&#8250;</span></span>'
                f'</summary><div class="pb-body"><table class="price-table">'
-               f'<thead><tr><th>Service</th><th>Unit</th><th>Economy</th><th>Premium</th></tr></thead>'
+               f'<thead><tr><th>Service</th><th class="pb-ucol">Unit</th><th>Economy</th><th>Premium</th></tr></thead>'
                f'<tbody>{rows}</tbody></table></div></details>')
     total=sum(g["count"] for g in book)
     return (f'<div class="pb-toolbar reveal"><div class="pb-search">{search_icon}'
@@ -771,7 +771,7 @@ def pricing():
 <section class="sec value"><div class="wrap">
   <div class="center reveal"><p class="eyebrow">The full price book</p><h2>Every job, with its price.</h2>
   <p class="lead center">Search it or browse by category. Prices are flat rates for standalone work in the Fairbanks area; your written quote confirms the exact number for your job.</p>
-  <div class="center" style="margin-top:14px"><span class="chip" style="background:var(--green);color:#fff"><span style="color:var(--gold);font-weight:800">Economy</span> &nbsp;standard-grade &nbsp;|&nbsp; <span style="font-weight:800">Premium</span>&nbsp; higher-end &nbsp;|&nbsp; <span style="font-weight:800">Flat rate</span>&nbsp; service-only, no materials</span></div>
+  <div class="pb-legend reveal"><span class="pb-leg"><b>Economy</b> standard-grade parts</span><span class="pb-leg"><b>Premium</b> higher-end materials</span><span class="pb-leg pb-leg-flat"><b>Flat rate</b> service-only, no materials</span></div>
   </div>
   <div style="margin-top:22px">{book_html}</div>
   <p class="muted center reveal" style="margin-top:26px">Prices are from our current Fairbanks price book and may vary with conditions. Larger projects and custom work are quoted as a flat project price after a quick look.</p>
