@@ -154,7 +154,7 @@ def footer():
         <span class="ft-family-label">A family of Fairbanks companies</span>
         <div class="ft-family-logos">
           <img src="assets/img/badge.png" alt="Husband for an Hour, Fairbanks handyman">
-          <img src="assets/img/septic-pro-badge.png" alt="Septic Pro, Fairbanks septic service">
+          <a href="https://septicproak.com" target="_blank" rel="noopener" aria-label="Septic Pro (opens in a new tab)"><img src="assets/img/septic-pro-badge.png" alt="Septic Pro, Fairbanks septic service"></a>
           <a href="https://www.hydrovacpro.com" target="_blank" rel="noopener" aria-label="Hydrovac Pro (opens in a new tab)"><img src="assets/img/hydrovac-pro-badge.png" alt="Hydrovac Pro, Fairbanks hydro-excavation"></a>
         </div>
       </div>
