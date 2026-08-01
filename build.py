@@ -177,7 +177,7 @@ def footer():
 </div></footer>
 <div class="mobile-bar">
   <a class="mb-call" href="tel:{TEL}">{ic("phone")}Call Now</a>
-  <a class="mb-quote" href="contact.html">{ic("chat")}Free Quote</a>
+  <a class="mb-quote" href="contact.html">{ic("chat")}Get a Quote</a>
 </div>
 <div id="google_translate_element"></div>
 <script src="assets/app.js?v={VER}"></script>'''
@@ -428,7 +428,7 @@ def home():
     faqs=[
      ("Why &ldquo;Husband for an Hour&rdquo;?","Because somebody has to fix the honey-do list, and it does not have to be you. The name is a wink. The work is the real deal: licensed, insured technicians who show up and get it done."),
      ("What does fixed pricing actually mean?","Every common job has a set flat rate in our price book. We quote that number before we start, so you are never surprised by an hourly meter or an open-ended time-and-materials invoice."),
-     ("Is there a fee for the estimate?","A standard onsite diagnosis is $200, and it is discounted when you have more than one price-book service done on the same visit. Many quotes can also be given remotely from a few photos at no charge."),
+     ("Is there a fee for the estimate?","A standard onsite diagnosis is $200, and it is discounted when you have more than one price-book service done on the same visit. Sending a few photos up front helps us quote accurately from our price book."),
      ("What is the difference between Economy and Premium?","Same skilled labor either way. Economy uses solid standard-grade materials; Premium uses higher-end parts and finishes. You choose the tier that fits your budget."),
      ("Where do you work?","Across the Fairbanks North Star Borough: Fairbanks, North Pole, Fox, Ester, Two Rivers, Salcha, Eielson AFB, Fort Wainwright and the surrounding communities."),
      ("Are you licensed and insured?","Yes. We are licensed, bonded and insured, and we provide a W-9, EIN and Certificate of Insurance on request."),
@@ -467,11 +467,11 @@ def home():
     <p class="lead">Husband for an Hour is the Fairbanks handyman crew that actually shows up, knocks out the honey-do list, and hands you a flat price before we start. No ring required. Just results.</p>
     <div class="hero-cta">
       <a class="btn btn-gold btn-lg" href="tel:{TEL}">{ic("phone")}Call or Text {PHONE}</a>
-      <a class="btn btn-light btn-lg" href="contact.html">Get My Free Quote</a>
+      <a class="btn btn-light btn-lg" href="contact.html">Get My Quote</a>
     </div>
     <div class="hero-trust">
       <span>{ic("check")}We actually answer the phone</span>
-      <span>{ic("check")}Free quotes within 24 hours</span>
+      <span>{ic("check")}Quotes within 24 hours</span>
       <span>{ic("check")}Same-week scheduling</span>
     </div>
     <div class="hero-chips">
@@ -627,7 +627,7 @@ def home():
 <section class="sec qform" id="quote"><div class="wrap">
   <div class="qform-grid">
     <div class="reveal">
-      <p class="eyebrow">Free, no-obligation quote</p>
+      <p class="eyebrow">No-obligation quote</p>
       <h2>Ready to cross it off the list?</h2>
       <p class="lead">Tell us the job and snap a couple of photos. We respond promptly with a flat price straight from our book. No hourly meter, no surprises.</p>
       <ul class="checks">
@@ -651,7 +651,7 @@ def home():
         <div class="field"><label>Email <span class="req">*</span></label><input name="email" type="email" required><div class="err">Please enter a valid email.</div></div>
         <div class="field"><label>What do you need done? <span class="req">*</span></label><textarea name="message" required placeholder="A few details and we will send your flat-rate quote."></textarea><div class="err">Please tell us about the job.</div></div>
         {upload_field("home")}
-        <button class="btn btn-gold btn-lg" type="submit" style="width:100%">Get my free quote</button>
+        <button class="btn btn-gold btn-lg" type="submit" style="width:100%">Get my quote</button>
         <p class="muted" style="font-size:.8rem;margin:12px 0 0;text-align:center">No obligation. W-9, EIN and Certificate of Insurance provided on request.</p>
       </form>
       <div id="formOk" class="form-ok"><b>Thanks, your request is in.</b><br>We will reach out shortly with your flat-rate quote. For anything urgent, call {PHONE}.</div>
@@ -739,7 +739,7 @@ def pricing():
     book_html=render_pricebook()
     faqs=[
      ("How is this different from time and materials?","Time-and-materials means the clock and the receipts decide your bill, and you only learn the total at the end. We work the opposite way: a published flat rate per job, quoted and approved before we start."),
-     ("What is the diagnosis fee?","For jobs that need an onsite look, the standard diagnosis is $200. That fee is discounted when you have more than one price-book service done on the same visit. Many jobs can also be quoted from a few photos for free."),
+     ("What is the diagnosis fee?","For jobs that need an onsite look, the standard diagnosis is $200. That fee is discounted when you have more than one price-book service done on the same visit. Sending a few photos up front helps us quote accurately from our price book."),
      ("Why are there two prices per job?","Economy uses dependable standard-grade parts; Premium uses higher-end materials and finishes. Labor and workmanship are the same. You pick the tier."),
      ("Do add-on prices save me money?","Yes. Once a technician is onsite for a main item, additional same-visit tasks are billed at the lower add-on rate because the trip and setup are already covered."),
     ]
@@ -762,7 +762,7 @@ def pricing():
   <div class="card reveal" style="margin-top:24px;background:var(--green);color:#eaf3ee;border:0">
     <div class="grid g-2" style="gap:24px;align-items:center">
       <div><h3 style="color:#fff">The estimate fee, plainly</h3>
-      <p style="color:#cfe0d6;margin:0">A standard onsite diagnosis is <b style="color:var(--gold)">$200</b>, and it is <b style="color:#fff">discounted</b> when you have more than one price-book service done on the same visit. Many jobs can also be quoted from a few photos at no charge.</p></div>
+      <p style="color:#cfe0d6;margin:0">A standard onsite diagnosis is <b style="color:var(--gold)">$200</b>, and it is <b style="color:#fff">discounted</b> when you have more than one price-book service done on the same visit. Sending a few photos up front helps us quote accurately from our price book.</p></div>
       <div style="text-align:center"><a class="btn btn-gold btn-lg" href="contact.html">Get my flat quote {ic("arrow")}</a></div>
     </div>
   </div>
@@ -864,8 +864,8 @@ def contact():
       "Arctic &amp; winter prep","Safety &amp; accessibility","Exterior &amp; gutters","Multiple items / punch list","Not sure, please advise"]
     opts="".join(f'<option>{c}</option>' for c in cats)
     return head(
-      "Contact &amp; Free Quote | Husband for an Hour, Fairbanks AK",
-      "Request a free flat-rate handyman quote in Fairbanks or North Pole. Call (907) 759-8080 or send a few photos and we will price the job from our book before any work starts.",
+      "Contact &amp; Request a Quote | Husband for an Hour, Fairbanks AK",
+      "Request a flat-rate handyman quote in Fairbanks or North Pole. Call (907) 759-8080 or send a few photos and we will price the job from our book before any work starts.",
       "contact.html"
     )+header("contact.html")+page_hero("Contact","Tell us the job. Get a flat price.",
       "Send a few details and photos and we will quote a flat rate from our price book, often before we ever set foot in your home."
@@ -873,7 +873,7 @@ def contact():
 <section class="sec"><div class="wrap">
   <div class="split" style="align-items:start">
     <div class="reveal">
-      <h2>Request your free quote</h2>
+      <h2>Request your quote</h2>
       <p class="muted">Most jobs can be quoted from photos, and we respond promptly.</p>
       <form id="quoteForm" class="form-card" action="{FORM_ACTION}" method="POST" enctype="multipart/form-data" novalidate>
         <input type="hidden" name="_subject" value="New quote request from husbandforhour.com">
@@ -1018,7 +1018,7 @@ llms=f"""# {NAME}
 - Business: {NAME}, a residential and commercial handyman service.
 - Location served: the entire Fairbanks North Star Borough, Alaska, including Fairbanks, North Pole, Fort Wainwright, Eielson AFB, College, Ester, Fox, Two Rivers, Salcha, Pleasant Valley, Moose Creek and Harding-Birch Lakes.
 - Pricing model: flat-rate / fixed pricing from a published price book (400+ line items across 13 categories). Most jobs have Economy and Premium material tiers; service-only jobs (drain clearing, gutter cleaning, snow removal, etc.) are a single flat rate. The price is quoted and approved before work starts — no hourly meter, no time-and-materials surprises.
-- Onsite diagnosis fee: $200, discounted when more than one price-book service is done on the same visit. Many jobs can be quoted for free from a few photos.
+- Onsite diagnosis fee: $200, discounted when more than one price-book service is done on the same visit. Sending a few photos up front helps us quote accurately from the price book. We do not offer free quotes.
 - Credentials: licensed, bonded, and insured; W-9, EIN, and Certificate of Insurance provided on request.
 - Phone / text: {PHONE}
 - Email: {EMAIL}
@@ -1032,12 +1032,12 @@ Homeowners, realtors (pre-listing punch lists), property managers (turnovers and
 Plumbing and drains; electrical and fixtures; drywall, patch and paint; doors, windows and weatherization; carpentry and repairs; flooring, tile and trim; hanging and assembly; caulking, kitchen and bath; safety and accessibility; garage and storage; exterior, yard and fencing; arctic and seasonal (Alaska winter prep); odd jobs, cleaning and hauling.
 
 ## Pages
-- [Home]({BASE}/): overview, fixed-price promise, reviews, free quote.
+- [Home]({BASE}/): overview, fixed-price promise, reviews, quote form.
 - [Services]({BASE}/services.html): full list of handyman services by category.
 - [Fixed Pricing]({BASE}/pricing.html): the complete, searchable flat-rate price book.
 - [Service Area]({BASE}/service-area.html): the Fairbanks North Star Borough communities served.
 - [About]({BASE}/about.html): the company and team.
-- [Contact]({BASE}/contact.html): request a free flat-rate quote (photos/videos accepted).
+- [Contact]({BASE}/contact.html): request a flat-rate quote (photos/videos accepted).
 """
 with open(os.path.join(OUT,"llms.txt"),"w") as f: f.write(llms)
 # Google Search Console HTML-file verification
