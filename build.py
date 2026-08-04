@@ -132,7 +132,7 @@ def header(active):
 </div></div>
 <header class="nav"><div class="wrap nav-inner">
   <a class="brand notranslate" href="index.html" translate="no" aria-label="{NAME} home">
-    <img src="assets/img/logo.png" alt="{NAME} handyman logo" loading="eager" fetchpriority="high"></a>
+    <img src="assets/img/logo.svg" alt="{NAME} handyman logo" width="860" height="531" loading="eager" fetchpriority="high"></a>
   <nav><ul class="nav-links">{lis}</ul></nav>
   <a class="nav-phone" href="tel:{TEL}">{PHONE}</a>
   <div class="nav-cta"><a class="btn btn-gold" href="contact.html">Get a Flat Quote</a></div>
