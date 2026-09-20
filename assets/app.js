@@ -172,31 +172,60 @@
     for(var i=0;i<LANGS.length;i++)if(LANGS[i][0]===code)return LANGS[i][1];
     return 'English';
   }
+  // Cookie scopes: the exact host, its dot-form, and the registrable domain, so the
+  // choice sticks whether the page is served from the apex or the www host.
+  function cookieDomains(){
+    var host=location.hostname,parts=host.split('.'),d=['',host,'.'+host];
+    if(parts.length>2)d.push('.'+parts.slice(-2).join('.'));
+    return d;
+  }
+  function writeGoogtrans(code){
+    cookieDomains().forEach(function(dm){
+      document.cookie='googtrans=/en/'+code+';path=/'+(dm?';domain='+dm:'');
+    });
+  }
+  function clearGoogtrans(){
+    cookieDomains().forEach(function(dm){
+      document.cookie='googtrans=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/'+(dm?';domain='+dm:'');
+    });
+  }
+  // Apply a language by driving Google's own hidden <select> — reliable, unlike the
+  // cookie-then-reload auto-apply. Retry until the widget's combo exists.
+  function applyLang(code){
+    var tries=0;
+    (function loop(){
+      var combo=document.querySelector('.goog-te-combo');
+      if(combo){
+        if(combo.value!==code){combo.value=code;combo.dispatchEvent(new Event('change'));}
+      }else if(tries++<60){setTimeout(loop,120);}
+    })();
+  }
+  function updateLabels(code){
+    var nm=nameFor(code);
+    [].forEach.call(document.querySelectorAll('.lang-label'),function(l){l.textContent=nm;});
+  }
+  function closeMenus(){
+    [].forEach.call(document.querySelectorAll('.lang-panel.open'),function(p){p.classList.remove('open');});
+    [].forEach.call(document.querySelectorAll('.nav-links.open'),function(m){m.classList.remove('open');});
+  }
   function setLang(code){
-    var host=location.hostname;
-    if(code==='en'){
-      document.cookie='googtrans=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/';
-      document.cookie='googtrans=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain='+host;
-      document.cookie='googtrans=;expires=Thu, 01 Jan 1970 00:00:00 GMT;path=/;domain=.'+host;
-    }else{
-      var v='/en/'+code;
-      document.cookie='googtrans='+v+';path=/';
-      document.cookie='googtrans='+v+';path=/;domain='+host;
-      document.cookie='googtrans='+v+';path=/;domain=.'+host;
-    }
-    location.reload();
+    if(code==='en'){clearGoogtrans();location.reload();return;}  // reload restores original English
+    writeGoogtrans(code);   // persist across page navigation
+    applyLang(code);        // translate the current page now, no reload
+    updateLabels(code);
+    closeMenus();
   }
 
-  document.querySelectorAll('.lang').forEach(function(root){
+  [].forEach.call(document.querySelectorAll('.lang'),function(root){
     var btn=root.querySelector('.lang-btn');
     var panel=root.querySelector('.lang-panel');
     var list=root.querySelector('.lang-list');
     var search=root.querySelector('.lang-search');
     var label=root.querySelector('.lang-label');
-    var cur=currentLang();
-    if(label)label.textContent=nameFor(cur);
+    if(label)label.textContent=nameFor(currentLang());
     function render(filter){
       filter=(filter||'').toLowerCase();
+      var cur=currentLang();
       list.innerHTML='';
       LANGS.filter(function(l){
         return !filter||l[1].toLowerCase().indexOf(filter)>-1||l[2].toLowerCase().indexOf(filter)>-1;
@@ -211,12 +240,15 @@
     btn.addEventListener('click',function(e){
       e.stopPropagation();
       var open=panel.classList.toggle('open');
-      if(open){render('');if(search){search.value='';setTimeout(function(){search.focus();},30);}}
+      if(open){render('');if(search){search.value='';setTimeout(function(){try{search.focus();}catch(_){}},30);}}
     });
     if(search)search.addEventListener('input',function(){render(search.value);});
     document.addEventListener('click',function(e){
       if(!root.contains(e.target))panel.classList.remove('open');
     });
   });
+
+  // Re-apply a previously chosen language on every page load (cookie auto-apply is unreliable).
+  (function(){var cur=currentLang();if(cur&&cur!=='en'){applyLang(cur);updateLabels(cur);}})();
 
 })();

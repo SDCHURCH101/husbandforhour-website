@@ -103,6 +103,13 @@ header.nav{position:sticky;top:0;z-index:1000;background:rgba(247,244,235,.92);
 .lang-item.sel{background:var(--green);color:#fff}
 .lang-item.sel .nat{color:#cfe0d6}
 .lang-credit{font-size:.72rem;color:var(--muted);padding:6px 6px 2px;text-align:center}
+/* language switcher shown at the top of the mobile hamburger menu (hidden on desktop) */
+.nav-lang-item{display:none;list-style:none;margin:0 0 6px;padding:0 0 8px;border-bottom:1px solid var(--line)}
+.nav-lang-item .lang{width:100%}
+.nav-lang-item .lang-btn{width:100%;justify-content:space-between;padding:.7rem .85rem;font-size:.98rem}
+.nav-lang-item .lang-label{margin-right:auto}
+.nav-lang-item .lang-panel{position:static;width:100%;max-width:none;box-shadow:none;margin-top:8px;padding:8px}
+.nav-lang-item .lang-list{max-height:48vh}
 
 /* hero */
 .hero{position:relative;background:linear-gradient(160deg,var(--green) 0%,var(--green-d) 70%,var(--green-dd) 100%);
@@ -512,9 +519,11 @@ body{top:0!important;position:static!important}
 @media(max-width:1140px){
   .nav-links,.nav-phone{display:none}
   .nav-links.open{display:flex;position:absolute;top:74px;left:0;right:0;flex-direction:column;
-    background:var(--cream);border-bottom:1px solid var(--line);padding:14px 22px;gap:2px;align-items:stretch}
+    background:var(--cream);border-bottom:1px solid var(--line);padding:14px 22px;gap:2px;align-items:stretch;
+    max-height:calc(100vh - 74px);overflow-y:auto}
   .nav-links.open a{padding:.85rem .6rem;border-radius:8px}
   .nav-links.open a.active::after{display:none}
+  .nav-links.open .nav-lang-item{display:block}
   .hamburger{display:block}
 }
 @media(max-width:760px){
@@ -525,4 +534,7 @@ body{top:0!important;position:static!important}
   .area-list{columns:1}
   .ft-grid{grid-template-columns:1fr}
   .util .u-item.hide-sm{display:none}
+  /* the "Get a Flat Quote" pill balloons when text is translated to a longer language
+     and overflows a phone; the sticky bottom bar already carries the call/quote CTAs */
+  .nav-cta{display:none}
 }

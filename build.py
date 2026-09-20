@@ -41,7 +41,7 @@ EMAIL="hman@husbandforhour.com"
 ADDR_CITY="Fairbanks"; ADDR_REGION="AK"; ADDR_ZIP="99707"; PO="PO Box 70200"
 GEO=(64.8378,-147.7164)
 YEAR="2026"
-VER="20"  # asset cache-bust
+VER="21"  # asset cache-bust
 GBP_PLACE="ChIJx4dkAM9FMlERiIUZ_RuUXds"  # Google Business Profile place id
 GBP_REVIEWS=f"https://search.google.com/local/reviews?placeid={GBP_PLACE}"
 GBP_WRITE=f"https://search.google.com/local/writereview?placeid={GBP_PLACE}"
@@ -114,26 +114,31 @@ def ic(n,cls=""):
 NAV=[("index.html","Home"),("services.html","Services"),("pricing.html","Fixed Pricing"),
      ("service-area.html","Service Area"),("about.html","About"),("contact.html","Contact")]
 
+def lang_switcher(cls=""):
+    c=(" "+cls) if cls else ""
+    return ('<div class="lang'+c+'"><button class="lang-btn" aria-label="Choose language">'
+            +ic("globe")+'<span class="lang-label">English</span>'
+            '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>'
+            '<div class="lang-panel"><input class="lang-search" type="text" placeholder="Search 80+ languages..." translate="no">'
+            '<ul class="lang-list"></ul>'
+            '<div class="lang-credit">Translation by Google</div></div></div>')
+
 def header(active):
     lis="".join(
       f'<li><a href="{u}" class="{"active" if u==active else ""}">{t}</a></li>' for u,t in NAV)
-    lang=('<div class="lang"><button class="lang-btn" aria-label="Choose language">'
-          +ic("globe")+'<span class="lang-label">English</span>'
-          '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 9 6 6 6-6"/></svg></button>'
-          '<div class="lang-panel"><input class="lang-search" type="text" placeholder="Search 80+ languages..." translate="no">'
-          '<ul class="lang-list"></ul>'
-          '<div class="lang-credit">Translation by Google</div></div></div>')
+    # A second switcher rides at the top of the mobile hamburger menu so it is easy to find on phones.
+    menu_lang=f'<li class="nav-lang-item notranslate" translate="no">{lang_switcher("nav-lang")}</li>'
     return f'''<div class="util"><div class="wrap">
   <span class="u-item"><a href="tel:{TEL}">{ic("phone")}{PHONE}</a></span>
   <span class="u-item hide-sm"><a href="mailto:{EMAIL}">{ic("mail")}{EMAIL}</a></span>
   <span class="u-spacer"></span>
   <span class="u-item hide-sm u-badge">{ic("shield")}Licensed &middot; Bonded &middot; Insured</span>
-  <span class="u-item notranslate" translate="no">{lang}</span>
+  <span class="u-item notranslate" translate="no">{lang_switcher()}</span>
 </div></div>
 <header class="nav"><div class="wrap nav-inner">
   <a class="brand notranslate" href="index.html" translate="no" aria-label="{NAME} home">
     <img src="assets/img/logo.svg" alt="{NAME} handyman logo" width="860" height="531" loading="eager" fetchpriority="high"></a>
-  <nav><ul class="nav-links">{lis}</ul></nav>
+  <nav><ul class="nav-links">{menu_lang}{lis}</ul></nav>
   <a class="nav-phone" href="tel:{TEL}">{PHONE}</a>
   <div class="nav-cta"><a class="btn btn-gold" href="contact.html">Get a Flat Quote</a></div>
   <button class="hamburger" aria-label="Menu">{ic("menu")}</button>
