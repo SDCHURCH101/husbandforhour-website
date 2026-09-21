@@ -196,7 +196,11 @@
     (function loop(){
       var combo=document.querySelector('.goog-te-combo');
       if(combo){
-        if(combo.value!==code){combo.value=code;combo.dispatchEvent(new Event('change'));}
+        // Always fire the change event, even when the value already reads `code`:
+        // Google's own cookie auto-apply can set the select yet leave the page
+        // untranslated, so forcing the event guarantees the translation runs.
+        combo.value=code;
+        combo.dispatchEvent(new Event('change'));
       }else if(tries++<60){setTimeout(loop,120);}
     })();
   }
