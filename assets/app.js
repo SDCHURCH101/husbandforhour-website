@@ -192,16 +192,20 @@
   // Apply a language by driving Google's own hidden <select> — reliable, unlike the
   // cookie-then-reload auto-apply. Retry until the widget's combo exists.
   // Apply a language by driving Google's own hidden <select>. On page load the
-  // translation engine lags behind the DOM, so a single change event fires too early
-  // and is dropped. Re-fire on an interval until Google actually applies it — it wraps
-  // every translated text node in a <font> tag, so their presence means "done".
+  // translation engine initializes after the DOM, so an early change event is dropped.
+  // Retry, but with enough spacing that a re-fire never interrupts an in-flight
+  // translation (which would restart it forever). Google wraps every translated text
+  // node in a <font> tag, so their presence means the translation finished.
   function applyLang(code){
-    var n=0;
-    var timer=setInterval(function(){
+    var tries=0;
+    (function attempt(){
       var combo=document.querySelector('.goog-te-combo');
       if(combo){combo.value=code;combo.dispatchEvent(new Event('change'));}
-      if(document.getElementsByTagName('font').length>0 || n++>25){clearInterval(timer);}
-    },600);
+      tries++;
+      setTimeout(function(){
+        if(document.getElementsByTagName('font').length===0 && tries<20){attempt();}
+      },1600);
+    })();
   }
   function updateLabels(code){
     var nm=nameFor(code);
